@@ -31,10 +31,13 @@ below. Sections that are most likely affected are marked [v8.0 check].
     --webview-shadow-light:0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 0px var(--window-border) 0px rgba(0, 0, 0, 0.10);
     --webview-shadow-dark:0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 2px 8px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1.2px #ffffff18;
     /* animations */
-    --tabbar-transition:width 0.15s ease;
+    --transition-duration:0.15s;
+    --transition-easing:ease;
+    --tabbar-transition:width var(--transition-duration) var(--transition-easing);
     /* auto-hide tabbar — set to 1 to enable (see bottom of file) */
     --enable-autohide-tabbar:0;
     --autohide-tabbar-size:32px;
+    --autohide-tabbar-collapsed:calc(var(--autohide-tabbar-size) + var(--densityGap));
     /* style container for @container style() queries */
     container-type:style;
     container-name:vivalarc-root;
@@ -152,7 +155,7 @@ below. Sections that are most likely affected are marked [v8.0 check].
 #browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button svg{
     scale: calc(var(--window-button-scale) / var(--uiZoomLevel));
     opacity:var(--window-button-opacity);
-    transition:opacity 0.15s ease;
+    transition:opacity var(--transition-duration) var(--transition-easing);
 }
 
 #browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button svg:hover{
@@ -227,7 +230,7 @@ below. Sections that are most likely affected are marked [v8.0 check].
 #browser:not(.tabs-top):not(.tabs-bottom) #panels-container{
     margin-bottom:var(--window-border);
     background:var(--colorArcBg);
-    transition:width var(--tabbar-transition);
+    transition:var(--tabbar-transition);
 }
 
 #browser:not(.tabs-top):not(.tabs-bottom) :is(#panels-container.overlay, #panels-container:not(.icons) .panel-group){
@@ -343,7 +346,7 @@ button.button-startpage:active{
    ===================================================================== */
 @container vivalarc-root style(--enable-autohide-tabbar: 1) {
     .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
-        width: calc(var(--autohide-tabbar-size) + var(--densityGap)) !important;
+        width: var(--autohide-tabbar-collapsed) !important;
     }
 
     .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title,
@@ -358,7 +361,7 @@ button.button-startpage:active{
 
     .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title{
         position: absolute;
-        left: calc(var(--autohide-tabbar-size) + var(--densityGap)) !important;
+        left: var(--autohide-tabbar-collapsed) !important;
     }
 
     .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator{
@@ -368,12 +371,12 @@ button.button-startpage:active{
 
     .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container,
     .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container .resize{
-        width: calc(var(--autohide-tabbar-size) + var(--densityGap)) !important;
+        width: var(--autohide-tabbar-collapsed) !important;
     }
 
     .inner > .tabbar-wrapper{
         position: relative;
-        width: calc(var(--autohide-tabbar-size) + var(--densityGap));
+        width: var(--autohide-tabbar-collapsed);
     }
 
     .inner > .tabbar-wrapper > .tabbar-wrapper{
@@ -383,7 +386,6 @@ button.button-startpage:active{
     }
 
     .inner > .tabbar-wrapper > .tabbar-wrapper:hover{
-        position: absolute;
         background: var(--colorImageLeftBg, var(--colorBgLight));
     }
 }
