@@ -52,3 +52,9 @@
 - Open Settings > Appearance > Custom UI MOD
 - Select the folder where you've extracted it
 - Restart Vivaldi
+
+### Vivaldi 8.0 — Layout Presets
+
+Vivaldi 8.0 added six built-in layout presets (Settings > Appearance > Layout). For the best VivalArc experience, choose **Vertical Left** — it matches the recommended left tab bar setup. Alternatively, configure the layout manually as described in Step 2 above.
+
+> If something looks broken after updating to Vivaldi 8.0, open `vivaldi://inspect/#apps/`, click **inspect** under `browser.html`, and use the element picker (`Ctrl+Shift+C`) to verify that element IDs like `#header`, `#tabs-tabbar-container`, and `#panels-container` still match the selectors in `vivalarc.css`.

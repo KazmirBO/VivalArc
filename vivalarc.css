@@ -1,25 +1,46 @@
 /*
-version: 1.3.0
-update: 2026-03-26
-vivaldi version: v7.9+
+version: 1.4.0
+update: 2026-05-21
+vivaldi version: v8.0+
+
+IMPORTANT — Vivaldi 8.0 introduced a "Unified frame" UI overhaul and a tabs
+management backend rewrite. If something looks broken, inspect the live DOM at
+vivaldi://inspect/#apps/ and compare element IDs/classes against the selectors
+below. Sections that are most likely affected are marked [v8.0 check].
 */
 
+/* @property required for the --enable-autohide-tabbar style container query */
+@property --enable-autohide-tabbar {
+    syntax: '<integer>';
+    inherits: true;
+    initial-value: 0;
+}
+
 :root{
-    --window-border:3px; /* window border, recommend 4px~16px */
-    --mac-header:calc(var(--window-border) + 20px); /* title bar extra height */
-    --win-header:calc(var(--window-border) + 20px); /* title bar extra height */
-    --linux-header:calc(var(--window-border) + 20px); /* title bar extra height */
+    --window-border:3px;            /* window border, recommend 4px~16px */
+    --mac-header:calc(var(--window-border) + 20px);
+    --win-header:calc(var(--window-border) + 20px);
+    --linux-header:calc(var(--window-border) + 20px);
     --win-title-padding:140px;
     --linux-title-padding:120px;
     --footer-height:24px;
     --window-button-scale:0.8;
     --window-button-opacity:0.3;
+    --window-button-hover-opacity:1;
     --colorArcBg:transparent;
     --webview-shadow-light:0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 0px var(--window-border) 0px rgba(0, 0, 0, 0.10);
     --webview-shadow-dark:0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 2px 8px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1.2px #ffffff18;
+    /* animations */
+    --tabbar-transition:width 0.15s ease;
+    /* auto-hide tabbar — set to 1 to enable (see bottom of file) */
+    --enable-autohide-tabbar:0;
+    --autohide-tabbar-size:32px;
+    /* style container for @container style() queries */
+    container-type:style;
+    container-name:vivalarc-root;
 }
 
-/* Core layout */
+/* Core layout [v8.0 check: Unified frame may affect #header/#main relationships] */
 #browser.break-mode #main{
     opacity:0;
 }
@@ -131,13 +152,14 @@ vivaldi version: v7.9+
 #browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button svg{
     scale: calc(var(--window-button-scale) / var(--uiZoomLevel));
     opacity:var(--window-button-opacity);
+    transition:opacity 0.15s ease;
 }
 
 #browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button svg:hover{
-    opacity:1;
+    opacity:var(--window-button-hover-opacity);
 }
 
-/* Tab bar */
+/* Tab bar [v8.0 check: tabs backend rewrite may affect .tabbar-wrapper and #tabs-tabbar-container] */
 :is(.tabs-left, .tabs-right) .tabbar-wrapper,
 #browser.transparent-tabbar #tabs-tabbar-container.left,
 #browser.transparent-tabbar #tabs-tabbar-container.right,
@@ -149,6 +171,11 @@ vivaldi version: v7.9+
 
 #browser:is(.tabs-left, .tabs-right) .inner > .tabbar-wrapper{
     padding-bottom:var(--window-border);
+}
+
+.inner #tabs-tabbar-container,
+.inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
+    transition:var(--tabbar-transition);
 }
 
 .color-behind-tabs-off .tab-indicator{
@@ -179,7 +206,7 @@ vivaldi version: v7.9+
     background:none;
 }
 
-/* Panels */
+/* Panels [v8.0 check: Unified frame may merge panel/sidebar background with tab bar surface] */
 #browser .manager-editor,
 #browser .toolbar:not(.toolbar-mainbar, .toolbar-statusbar){
     color:var(--colorImageCenterFgAlpha, var(--colorFg));
@@ -200,6 +227,7 @@ vivaldi version: v7.9+
 #browser:not(.tabs-top):not(.tabs-bottom) #panels-container{
     margin-bottom:var(--window-border);
     background:var(--colorArcBg);
+    transition:width var(--tabbar-transition);
 }
 
 #browser:not(.tabs-top):not(.tabs-bottom) :is(#panels-container.overlay, #panels-container:not(.icons) .panel-group){
@@ -301,4 +329,61 @@ button.button-startpage:after{
 
 button.button-startpage:active{
     background:none !important;
+}
+
+/* =====================================================================
+   AUTO-HIDE TABBAR
+   Original implementation by @Zettry.
+
+   To enable: set --enable-autohide-tabbar: 1 in :root above.
+   Requires Vivaldi 8.0+ (Chromium 130+, @container style() support).
+
+   When active, the tab bar collapses to --autohide-tabbar-size wide and
+   expands on hover. The workspace button also collapses to icon-only.
+   ===================================================================== */
+@container vivalarc-root style(--enable-autohide-tabbar: 1) {
+    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
+        width: calc(var(--autohide-tabbar-size) + var(--densityGap)) !important;
+    }
+
+    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title,
+    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator{
+        display: none;
+    }
+
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-icon{
+        position: absolute;
+        left: 5px;
+    }
+
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title{
+        position: absolute;
+        left: calc(var(--autohide-tabbar-size) + var(--densityGap)) !important;
+    }
+
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator{
+        position: absolute;
+        right: 5px;
+    }
+
+    .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container,
+    .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container .resize{
+        width: calc(var(--autohide-tabbar-size) + var(--densityGap)) !important;
+    }
+
+    .inner > .tabbar-wrapper{
+        position: relative;
+        width: calc(var(--autohide-tabbar-size) + var(--densityGap));
+    }
+
+    .inner > .tabbar-wrapper > .tabbar-wrapper{
+        position: absolute;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .inner > .tabbar-wrapper > .tabbar-wrapper:hover{
+        position: absolute;
+        background: var(--colorImageLeftBg, var(--colorBgLight));
+    }
 }

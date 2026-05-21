@@ -2,7 +2,7 @@
 
 Transform Vivaldi Browser into Arc Browser's elegant design - the perfect Arc alternative.
 
-**Current Version**: v1.3.0 | **Supports Vivaldi**: v7.9+ | **Platforms**: macOS, Windows, Linux
+**Current Version**: v1.4.0 | **Supports Vivaldi**: v8.0+ | **Platforms**: macOS, Windows, Linux
 
 ## 🚀 Quick Start
 
@@ -16,15 +16,13 @@ git clone https://github.com/tovifun/VivalArc.git
 #### ✨ Root Version (Actively Maintained)
 In Vivaldi settings, select directory: `VivalArc/`
 
-This is the only version that will continue to receive ongoing fixes and refinements.
+This is the only version that receives ongoing fixes and new features.
 
-#### 📁 Compatibility Folders (Legacy)
-- **Auto-hide Tabbar**: `VivalArc/variants/autotab/`
-- **Compact UI**: `VivalArc/variants/compact/`
-
-These folders are kept for reference and compatibility, but they are no longer actively iterated.
+**Built-in optional features** — edit `vivalarc.css` and set in the `:root` block:
+- `--enable-autohide-tabbar: 1` — tab bar collapses to icon width, expands on hover
 
 #### 📦 Archived Versions (Legacy Support)
+- **Vivaldi 7.7**: `VivalArc/archive/v7.7/` (autotab and compact variants)
 - **Vivaldi 6.9**: `VivalArc/archive/v6.9/default/`
 - **Vivaldi 7.0**: `VivalArc/archive/v7.0/default/`
 - **Vivaldi 7.4**: `VivalArc/archive/v7.4/default/`
@@ -64,11 +62,9 @@ This feels cleaner and more comfortable to use than forcing every control into t
 
 ```
 VivalArc/
-├── vivalarc.css           # v7.9 default version
-├── variants/              # Legacy compatibility folders
-│   ├── autotab/          # Auto-hide tabbar
-│   └── compact/          # Compact UI
+├── vivalarc.css           # v8.0 default version (actively maintained)
 ├── archive/              # Legacy versions
+│   ├── v7.7/             # autotab and compact variants (Vivaldi 7.7)
 │   ├── v6.9/
 │   ├── v7.0/
 │   └── v7.4/

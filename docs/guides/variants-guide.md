@@ -1,18 +1,31 @@
 # Legacy Variant Notes
 
-`vivalarc.css` in the repository root is now the only actively maintained version of VivalArc.
+`vivalarc.css` in the repository root is the only actively maintained version of VivalArc.
 
-## Current Policy
+## Auto-Hide Tab Bar (formerly `autotab` variant)
 
-The folders in `variants/` are kept as legacy compatibility presets:
+The auto-hiding tab bar is now built into the root stylesheet as an optional toggle — no separate file needed.
 
-- `variants/autotab/`
-- `variants/compact/`
+To enable it, open `vivalarc.css` and change the variable in the `:root` block:
 
-They may still be useful if you prefer those layouts, but they are no longer the main target for ongoing fixes or feature work.
+```css
+--enable-autohide-tabbar: 1;   /* 0 = off (default), 1 = on */
+```
+
+You can also adjust the collapsed width:
+
+```css
+--autohide-tabbar-size: 32px;
+```
+
+Restart Vivaldi after saving.
+
+## Archived Variants
+
+The old `variants/autotab/` and `variants/compact/` folders have been moved to `archive/v7.7/`. They target Vivaldi 7.7 and are no longer updated.
 
 ## Recommendation
 
-For new installs and future updates, select `VivalArc/` in Vivaldi Settings > Appearance > Custom UI Modifications.
+For new installs, select `VivalArc/` in Vivaldi Settings > Appearance > Custom UI Modifications.
 
-If you are currently using a legacy variant and run into breakage after a Vivaldi update, switch back to the root version first. Future improvements will be merged into the root stylesheet rather than maintained in separate variant branches.
+If you were using a legacy variant and encounter breakage after a Vivaldi update, switch to the root version and use the built-in toggles described above.
