@@ -1,3 +1,13 @@
+## 🗓️ 2026.05.21 | v1.4.0
+Updated for Vivaldi 8.0, which introduced the "Unified frame" UI overhaul and a tabs management backend rewrite.
+
+1. Updated compatibility for Vivaldi 8.0.
+2. Added `[v8.0 check]` markers in the stylesheet at selectors most likely to be affected by the Unified frame — inspect the live DOM at `vivaldi://inspect/#apps/` if anything looks off.
+3. Merged the auto-hiding tab bar feature (originally a separate `autotab` variant by @Zettry) into the root stylesheet as an optional toggle: set `--enable-autohide-tabbar: 1` in the `:root` block to enable it.
+4. Added smooth transition animation for the tab bar (`--tabbar-transition`) and panel container.
+5. Added `--window-button-hover-opacity` variable for configurable window button hover opacity.
+6. Moved legacy variants (`autotab`, `compact`) to `archive/v7.7/` — they are no longer maintained as separate files.
+
 ## 🗓️ 2026.03.26 | v1.3.0
 This update targets the latest Vivaldi 7.9 release and refreshes VivalArc after a long gap between updates.
 
