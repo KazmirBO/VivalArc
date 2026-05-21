@@ -30,14 +30,14 @@ below. Sections that are most likely affected are marked [v8.0 check].
     --colorArcBg:transparent;
     --webview-shadow-light:0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 0px var(--window-border) 0px rgba(0, 0, 0, 0.10);
     --webview-shadow-dark:0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 2px 8px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1.2px #ffffff18;
-    /* animations */
+    /* transitions */
     --transition-duration:0.15s;
     --transition-easing:ease;
     --tabbar-transition:width var(--transition-duration) var(--transition-easing);
     /* auto-hide tabbar — set to 1 to enable (see bottom of file) */
     --enable-autohide-tabbar:0;
     --autohide-tabbar-size:32px;
-    --autohide-tabbar-collapsed:calc(var(--autohide-tabbar-size) + var(--densityGap));
+    --autohide-tabbar-collapsed:calc(var(--autohide-tabbar-size) + var(--densityGap, 4px)); /* derived: collapsed bar width */
     /* style container for @container style() queries */
     container-type:style;
     container-name:vivalarc-root;
@@ -178,8 +178,12 @@ below. Sections that are most likely affected are marked [v8.0 check].
 .color-behind-tabs-off {
     .tab-indicator {
         background-color:var(--colorAccentBgAlpha);
-        &:hover { background-color:var(--colorAccentBg); }
-        &.active { background-color:var(--colorAccentBg); }
+        &:hover {
+            background-color:var(--colorAccentBg);
+        }
+        &.active {
+            background-color:var(--colorAccentBg);
+        }
     }
     .tab.active + .tab-group-indicator .tab-indicator.active {
         background-color:var(--colorAccentBg);
@@ -206,7 +210,7 @@ below. Sections that are most likely affected are marked [v8.0 check].
 }
 
 #browser:not(.tabs-top, .tabs-bottom) :is(#panels #switch, #panels, #panels-container){
-    padding-top: 0px;
+    padding-top: 0;
     border: 0;
 }
 
@@ -323,7 +327,7 @@ button.button-startpage:active{
     background:none !important;
 }
 
-/* Transitions — only applied when the user has not requested reduced motion */
+/* Transitions */
 @media (prefers-reduced-motion: no-preference) {
     .inner #tabs-tabbar-container,
     .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
@@ -339,16 +343,8 @@ button.button-startpage:active{
     }
 }
 
-/* =====================================================================
-   AUTO-HIDE TABBAR
-   Original implementation by @Zettry.
-
-   To enable: set --enable-autohide-tabbar: 1 in :root above.
-   Requires Vivaldi 8.0+ (Chromium 130+, @container style() support).
-
-   When active, the tab bar collapses to --autohide-tabbar-size wide and
-   expands on hover. The workspace button also collapses to icon-only.
-   ===================================================================== */
+/* Auto-hide tabbar — original implementation by @Zettry.
+   To enable: set --enable-autohide-tabbar: 1 in :root above. */
 @container vivalarc-root style(--enable-autohide-tabbar: 1) {
     .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
         width: var(--autohide-tabbar-collapsed) !important;
