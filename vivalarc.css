@@ -30,14 +30,14 @@ below. Sections that are most likely affected are marked [v8.0 check].
     --colorArcBg:transparent;
     --webview-shadow-light:0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 0px var(--window-border) 0px rgba(0, 0, 0, 0.10);
     --webview-shadow-dark:0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 2px 8px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1.2px #ffffff18;
-    /* animations */
+    /* transitions */
     --transition-duration:0.15s;
     --transition-easing:ease;
     --tabbar-transition:width var(--transition-duration) var(--transition-easing);
     /* auto-hide tabbar — set to 1 to enable (see bottom of file) */
     --enable-autohide-tabbar:0;
     --autohide-tabbar-size:32px;
-    --autohide-tabbar-collapsed:calc(var(--autohide-tabbar-size) + var(--densityGap));
+    --autohide-tabbar-collapsed:calc(var(--autohide-tabbar-size) + var(--densityGap, 4px)); /* derived: collapsed bar width */
     /* style container for @container style() queries */
     container-type:style;
     container-name:vivalarc-root;
@@ -52,8 +52,8 @@ below. Sections that are most likely affected are marked [v8.0 check].
     display:none;
 }
 
-#browser:not(.tabs-bottom):not(.tabs-top) footer#footer,
-#browser:not(.tabs-bottom):not(.tabs-top) > footer,
+#browser:not(.tabs-bottom, .tabs-top) footer#footer,
+#browser:not(.tabs-bottom, .tabs-top) > footer,
 #browser > footer > .toolbar-statusbar{
     background:var(--colorArcBg);
     color: var(--colorImageBottomFg);
@@ -61,30 +61,30 @@ below. Sections that are most likely affected are marked [v8.0 check].
     border:none;
 }
 
-#browser:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) #header{
+#browser:not(.is-settingspage, .tabs-top, .tabs-bottom) #header{
     box-shadow:none;
     background:var(--colorArcBg);
     overflow: visible;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) .mainbar{
+#browser:not(.tabs-top, .tabs-bottom) .mainbar{
     border:none;
     background: var(--colorArcBg);
     color:var(--colorImageTopFg, var(--colorFg));
     -webkit-app-region: drag;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField){
+#browser:not(.tabs-top, .tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField){
     background-color: var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
     border: 1px solid var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
     color:var(--colorImageCenterFgAlpha, var(--colorFg));
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField):focus-within{
+#browser:not(.tabs-top, .tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField):focus-within{
     background-color: var(--colorBg);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(
+#browser:not(.tabs-top, .tabs-bottom) :is(
     .UrlFragment-Wrapper:not(.UrlFragment-Wrapper--ShouldHighlight),
     .UrlFragment-Wrapper--ShouldHighlight,
     .UrlFragment--Highlight
@@ -97,17 +97,17 @@ below. Sections that are most likely affected are marked [v8.0 check].
     border:none;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom).density-on .toolbar-mainbar:not(.toolbar-wrap) .button-toolbar:not(:last-of-type),
-#browser:not(.tabs-top):not(.tabs-bottom).density-on .toolbar-statusbar .button-toolbar:not(:last-of-type){
+#browser:not(.tabs-top, .tabs-bottom).density-on .toolbar-mainbar:not(.toolbar-wrap) .button-toolbar:not(:last-of-type),
+#browser:not(.tabs-top, .tabs-bottom).density-on .toolbar-statusbar .button-toolbar:not(:last-of-type){
     padding-right:0;
     margin-right:var(--densityGap);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(.ExtensionIcon--Hidden, .ExtensionToggleIcon.ExtensionToggleIcon--Expanded){
+#browser:not(.tabs-top, .tabs-bottom) :is(.ExtensionIcon--Hidden, .ExtensionToggleIcon.ExtensionToggleIcon--Expanded){
     background-color:var(--colorArcBg);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(
+#browser:not(.tabs-top, .tabs-bottom) :is(
     .ExtensionIcon--Hidden:hover,
     .ExtensionIcon--Hidden:active,
     .button-toolbar > button:hover,
@@ -117,7 +117,7 @@ below. Sections that are most likely affected are marked [v8.0 check].
     border-radius:var(--radius);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom).color-behind-tabs-off :is(
+#browser:not(.tabs-top, .tabs-bottom).color-behind-tabs-off :is(
     .toolbar-mainbar .toolbar-extensions > .button-toolbar > button:hover,
     .toolbar-mainbar .page-zoom-controls > .button-toolbar > button:hover,
     .toolbar-mainbar > .button-toolbar > button:hover,
@@ -138,12 +138,12 @@ below. Sections that are most likely affected are marked [v8.0 check].
 }
 
 /*windowButtonGroup-Linux*/
-#browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup{
+#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup{
     right: calc(var(--window-border) / var(--uiZoomLevel));
     top: calc(1px / var(--uiZoomLevel));
 }
 
-#browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button{
+#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button{
     width:calc((var(--linux-header) - 2px) * 1.32 / var(--uiZoomLevel));
     height:calc((var(--linux-header) - 2px) / var(--uiZoomLevel));
     padding:0px;
@@ -152,13 +152,12 @@ below. Sections that are most likely affected are marked [v8.0 check].
     justify-content:center;
 }
 
-#browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button svg{
+#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg{
     scale: calc(var(--window-button-scale) / var(--uiZoomLevel));
     opacity:var(--window-button-opacity);
-    transition:opacity var(--transition-duration) var(--transition-easing);
 }
 
-#browser.linux:not(.is-settingspage):not(.tabs-top):not(.tabs-bottom) .window-buttongroup button svg:hover{
+#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg:hover{
     opacity:var(--window-button-hover-opacity);
 }
 
@@ -176,32 +175,27 @@ below. Sections that are most likely affected are marked [v8.0 check].
     padding-bottom:var(--window-border);
 }
 
-.inner #tabs-tabbar-container,
-.inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
-    transition:var(--tabbar-transition);
+.color-behind-tabs-off {
+    .tab-indicator {
+        background-color:var(--colorAccentBgAlpha);
+        &:hover {
+            background-color:var(--colorAccentBg);
+        }
+        &.active {
+            background-color:var(--colorAccentBg);
+        }
+    }
+    .tab.active + .tab-group-indicator .tab-indicator.active {
+        background-color:var(--colorAccentBg);
+    }
 }
 
-.color-behind-tabs-off .tab-indicator{
-    background-color:var(--colorAccentBgAlpha);
-}
-.color-behind-tabs-off .tab-indicator:hover{
-    background-color:var(--colorAccentBg);
-}
-
-.color-behind-tabs-off .tab-indicator.active{
-    background-color:var(--colorAccentBg);
-}
-
-.color-behind-tabs-off .tab.active + .tab-group-indicator .tab-indicator.active{
-    background-color:var(--colorAccentBg);
-}
-
-#browser:not(.tabs-top):not(.tabs-bottom).color-behind-tabs-off :is(#tabs-subcontainer.left, #tabs-subcontainer.right){
+#browser:not(.tabs-top, .tabs-bottom).color-behind-tabs-off :is(#tabs-subcontainer.left, #tabs-subcontainer.right){
     box-shadow:none;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom).color-behind-tabs-off #tabs-subcontainer,
-#browser:not(.tabs-top):not(.tabs-bottom).transparent-tabbar #tabs-subcontainer{
+#browser:not(.tabs-top, .tabs-bottom).color-behind-tabs-off #tabs-subcontainer,
+#browser:not(.tabs-top, .tabs-bottom).transparent-tabbar #tabs-subcontainer{
     background-color:transparent;
 }
 
@@ -215,8 +209,8 @@ below. Sections that are most likely affected are marked [v8.0 check].
     color:var(--colorImageCenterFgAlpha, var(--colorFg));
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(#panels #switch, #panels, #panels-container){
-    padding-top: 0px;
+#browser:not(.tabs-top, .tabs-bottom) :is(#panels #switch, #panels, #panels-container){
+    padding-top: 0;
     border: 0;
 }
 
@@ -227,52 +221,51 @@ below. Sections that are most likely affected are marked [v8.0 check].
     border-radius:var(--radiusHalf);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) #panels-container{
+#browser:not(.tabs-top, .tabs-bottom) #panels-container{
     margin-bottom:var(--window-border);
     background:var(--colorArcBg);
-    transition:var(--tabbar-transition);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) :is(#panels-container.overlay, #panels-container:not(.icons) .panel-group){
+#browser:not(.tabs-top, .tabs-bottom) :is(#panels-container.overlay, #panels-container:not(.icons) .panel-group){
     background:var(--colorBgAlphaBlur);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) #panels-container.icons{
+#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons{
     background: var(--colorArcBg);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) #panels-container .panel-group{
+#browser:not(.tabs-top, .tabs-bottom) #panels-container .panel-group{
     border-radius:var(--radiusCap);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom) #panels-container.overlay .panel-group{
+#browser:not(.tabs-top, .tabs-bottom) #panels-container.overlay .panel-group{
     border-radius:0;
 }
 
 /* Webview */
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) #webview-container{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webview-container{
     margin:0 var(--window-border) var(--window-border);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-left #webview-container{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-left #webview-container{
     margin-left:0;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-right #webview-container{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-right #webview-container{
     margin-right:0;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-off #main.left #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-right #main.left #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-off #main.left #panels-container.minimized.overlay ~ #webview-container,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-right #main.left #panels-container.minimized.overlay ~ #webview-container{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.left #panels-container.icons ~ #webview-container,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-right #main.left #panels-container.icons ~ #webview-container,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.left #panels-container.minimized.overlay ~ #webview-container,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-right #main.left #panels-container.minimized.overlay ~ #webview-container{
     margin-left:0;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-left #main.right #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-off #main.right #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-left #main.right #panels-container.minimized.overlay ~ #webview-container,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).tabs-off #main.right #panels-container.minimized.overlay ~ #webview-container{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-left #main.right #panels-container.icons ~ #webview-container,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.right #panels-container.icons ~ #webview-container,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-left #main.right #panels-container.minimized.overlay ~ #webview-container,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.right #panels-container.minimized.overlay ~ #webview-container{
     margin-right:0;
 }
 
@@ -281,33 +274,33 @@ below. Sections that are most likely affected are marked [v8.0 check].
     overflow:visible;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) #webpage-stack{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webpage-stack{
     border-radius:var(--radiusCap);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).theme-light #webpage-stack{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).theme-light #webpage-stack{
     box-shadow: var(--webview-shadow-light);
 }
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen).theme-dark #webpage-stack{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen).theme-dark #webpage-stack{
     box-shadow: var(--webview-shadow-dark);
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) #webpage-stack:has(.tiled .visible),
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) #webpage-stack:has(.mosaic .visible){
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webpage-stack:has(.tiled .visible),
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webpage-stack:has(.mosaic .visible){
     box-shadow: none;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) #webview-container:has(#webpage-stack .tiled .visible),
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) #webview-container:has(#webpage-stack .mosaic .visible){
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webview-container:has(#webpage-stack .tiled .visible),
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webview-container:has(#webpage-stack .mosaic .visible){
     box-shadow: none;
     padding:0;
 }
 
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) .mosaic-split .mosaic-split-line,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) .mosaic-split .mosaic-split-line:before,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) .mosaic-split .mosaic-split-line:after,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen) .tile,
-#browser:not(.tabs-top):not(.tabs-bottom):not(.fullscreen):not(.narrow-tiling) .tiled.visible .tile[data-id]{
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .mosaic-split .mosaic-split-line,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .mosaic-split .mosaic-split-line:before,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .mosaic-split .mosaic-split-line:after,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .tile,
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen, .narrow-tiling) .tiled.visible .tile[data-id]{
     background:transparent;
     box-shadow:none;
 }
@@ -334,16 +327,24 @@ button.button-startpage:active{
     background:none !important;
 }
 
-/* =====================================================================
-   AUTO-HIDE TABBAR
-   Original implementation by @Zettry.
+/* Transitions */
+@media (prefers-reduced-motion: no-preference) {
+    .inner #tabs-tabbar-container,
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
+        transition:var(--tabbar-transition);
+    }
 
-   To enable: set --enable-autohide-tabbar: 1 in :root above.
-   Requires Vivaldi 8.0+ (Chromium 130+, @container style() support).
+    #browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg{
+        transition:opacity var(--transition-duration) var(--transition-easing);
+    }
 
-   When active, the tab bar collapses to --autohide-tabbar-size wide and
-   expands on hover. The workspace button also collapses to icon-only.
-   ===================================================================== */
+    #browser:not(.tabs-top, .tabs-bottom) #panels-container{
+        transition:var(--tabbar-transition);
+    }
+}
+
+/* Auto-hide tabbar — original implementation by @Zettry.
+   To enable: set --enable-autohide-tabbar: 1 in :root above. */
 @container vivalarc-root style(--enable-autohide-tabbar: 1) {
     .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
         width: var(--autohide-tabbar-collapsed) !important;
