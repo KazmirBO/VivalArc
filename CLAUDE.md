@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 VivalArc is a pure CSS customization theme for Vivaldi Browser that transforms its interface to match Arc Browser's design. There is no build pipeline — contributors edit CSS and Markdown directly.
 
-**Current version**: v1.3.0 | **Target**: Vivaldi 7.9+ | **Platforms**: macOS, Windows, Linux
+**Current version**: v1.4.0 | **Target**: Vivaldi 8.0+ | **Platforms**: macOS, Windows, Linux
 
 ## Development Commands
 
@@ -14,10 +14,10 @@ No build or test commands exist. Common git/search workflows:
 
 ```bash
 # Find related rules before editing
-rg -n "selector|token" vivalarc.css variants docs
+rg -n "selector|token" vivalarc.css docs
 
 # Review changes before a PR
-git diff -- vivalarc.css variants/ docs/
+git diff -- vivalarc.css docs/
 ```
 
 **Local testing**: In Vivaldi Settings > Appearance > Custom UI Modifications, point to the repo root (or a specific variant folder), then restart Vivaldi. Validate manually across light and dark themes, left tab layouts, and at least one platform selector (`.mac`, `.win`, `.linux`).
@@ -25,17 +25,17 @@ git diff -- vivalarc.css variants/ docs/
 ## Architecture
 
 ```
-vivalarc.css          # Primary stylesheet (Vivaldi 7.9+) — the only actively maintained file
-variants/
-  autotab/            # Auto-hiding tabbar variant (legacy, v1.2.0)
-  compact/            # Compact UI variant (legacy, v1.2.0)
-archive/              # Frozen snapshots for Vivaldi v6.9, v7.0, v7.4
+vivalarc.css          # Primary stylesheet (Vivaldi 8.0+) — the only actively maintained file
+archive/              # Frozen snapshots (v6.9, v7.0, v7.4, v7.7); do not modify
 themes/               # Packaged Vivaldi .zip theme files + screenshots
 docs/                 # User-facing docs; English files mirrored by -cn.md Chinese counterparts
 assets/               # Icons and wallpapers
 ```
 
-Only `vivalarc.css` (root) receives ongoing fixes. `variants/` and `archive/` are kept for compatibility — do not remove or rewrite archived versions unless intentionally updating legacy support.
+Only `vivalarc.css` receives ongoing fixes. `archive/` is kept for compatibility — do not remove or rewrite archived versions unless intentionally updating legacy support.
+
+Optional features are toggled via CSS variables in the `:root` block of `vivalarc.css`:
+- `--enable-autohide-tabbar: 1` — collapses the tab bar to `--autohide-tabbar-size` wide, expands on hover
 
 ## Key CSS Conventions
 
