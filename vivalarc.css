@@ -230,13 +230,11 @@ below. Sections that are most likely affected are marked [v8.0 check].
     background:var(--colorBgAlphaBlur);
 }
 
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons{
-    background: var(--colorArcBg);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons #switch{
+#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons,
+#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons :is(#panels, #switch){
     background: var(--colorArcBg);
     box-shadow: none;
+    border: none;
 }
 
 #browser:not(.tabs-top, .tabs-bottom) #panels-container .panel-group{
