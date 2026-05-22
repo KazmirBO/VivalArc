@@ -231,7 +231,7 @@ below. Sections that are most likely affected are marked [v8.0 check].
 }
 
 #browser:not(.tabs-top, .tabs-bottom) #panels-container.icons,
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons :is(#panels, #switch, .panel-group){
+#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons :is(#panels, #switch, .panel-group, .toolbar-panel){
     background: var(--colorArcBg);
     backdrop-filter: none;
 }
