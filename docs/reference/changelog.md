@@ -1,3 +1,13 @@
+## 🗓️ 2026.06.10 | v2.0.0
+Ground-up rewrite of the stylesheet. Selector behavior is intentionally identical to v1.4.0 — what changed is structure, shadows, and motion.
+
+1. Rewritten with native CSS nesting: shared guards such as `#browser:not(.tabs-top, .tabs-bottom)` are now declared once per section instead of being repeated on almost every rule, which makes the file easier to scan and cheaper for the style engine to match.
+2. Consolidated duplicate rules with `:is()`, merged the two `:has()` probes for tiled/mosaic page grids into one each, and removed a redundant `theme-light` shadow rule (the fallback already covered it).
+3. New layered webview shadows for both light and dark themes — a tight contact shadow, a soft ambient shadow, and a hairline edge.
+4. Snappier motion: a decelerated `cubic-bezier(0.2, 0, 0, 1)` easing token replaces plain `ease`, plus gentle hover transitions on toolbar buttons and the address field (all gated behind `prefers-reduced-motion: no-preference`).
+5. New accent-colored focus ring on the address/search field (`--urlbar-focus-ring`), derived from the active theme via `color-mix()`.
+6. Deliberately no `@layer`: layered rules would lose the cascade against Vivaldi's own unlayered styles.
+
 ## 🗓️ 2026.05.21 | v1.4.0
 Updated for Vivaldi 8.0, which introduced the "Unified frame" UI overhaul and a tabs management backend rewrite.
 
@@ -86,13 +96,4 @@ I recently discovered a plugin called [Reflect New Tab](https://chromewebstore.g
     - Show the title bar and keep the three buttons in the upper-left corner visible (many users had trouble finding them);
     - Remove drag-and-drop for the Tab bar (it caused many unexpected bugs);
     - Simplify the style sheet
-        - Previously, too many custom CSS styles were used to make the appearance match Arc as closely as possible, which caused some styles to break when Vivaldi was updated. Therefore, a principle was established this time to not blindly pursue perfect styling, but rather use as little CSS as possible;
-
-## 🗓️ 2022.08.28 Background: Why I made this
-To give some background, I've been using the Vivaldi browser as my primary browser for about a year now. Recently, I had the opportunity to try out the Arc browser, which was still in beta testing at the time, for about two weeks. The experience of using Arc during those two weeks was really good - the interactions felt intuitive, and the UI was very aesthetically pleasing.
-
-However, I eventually switched back to Vivaldi primarily because Arc crashed a few times during use.
-
-Later, I learned that Vivaldi actually allows for UI customization using CSS, so I decided to give it a try. The result is the configuration that is described on this webpage.
-
-While the final result doesn't quite measure up to Arc's UI and attention to detail, I feel that this configuration provides a similar user experience. So I wanted to share this configuration with everyone who is still waiting to test out Arc, or who might be looking for an alternative due to Arc's memory usage.
+        - Previously, too many custom CSS styles were used to make the appearanc

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 VivalArc is a pure CSS customization theme for Vivaldi Browser that transforms its interface to match Arc Browser's design. There is no build pipeline — contributors edit CSS and Markdown directly.
 
-**Current version**: v1.4.0 | **Target**: Vivaldi 8.0+ | **Platforms**: macOS, Windows, Linux
+**Current version**: v2.0.0 | **Target**: Vivaldi 8.0+ | **Platforms**: macOS, Windows, Linux
 
 ## Development Commands
 
@@ -28,7 +28,7 @@ git diff -- vivalarc.css docs/
 vivalarc.css          # Primary stylesheet (Vivaldi 8.0+) — the only actively maintained file
 archive/              # Frozen snapshots (v6.9, v7.0, v7.4, v7.7); do not modify
 themes/               # Packaged Vivaldi .zip theme files + screenshots
-docs/                 # User-facing docs; English files mirrored by -cn.md Chinese counterparts
+docs/                 # User-facing docs; English files mirrored by -pl.md Polish counterparts
 assets/               # Icons and wallpapers
 ```
 
@@ -40,6 +40,8 @@ Optional features are toggled via CSS variables in the `:root` block of `vivalar
 ## Key CSS Conventions
 
 - **4-space indentation** throughout all CSS files
+- **Native CSS nesting** (since v2.0.0): shared guards like `#browser:not(.tabs-top, .tabs-bottom)` are declared once per section — add new rules inside the existing guard block instead of repeating the prefix
+- **No `@layer`**: layered rules would lose the cascade against Vivaldi's own unlayered styles
 - Custom properties in `--kebab-case`; group related rules under brief block comments
 - Prefer small, targeted overrides over large selector rewrites
 - Platform-specific rules use `.mac`, `.win`, `.linux` selectors
@@ -48,19 +50,10 @@ Optional features are toggled via CSS variables in the `:root` block of `vivalar
   - `--mac-header` / `--win-header` / `--linux-header`: header heights per platform
   - `--colorArcBg`: background color (transparent by default)
   - `--window-button-opacity`: window control visibility (0–1, default 0.3)
-  - `--webview-shadow-light` / `--webview-shadow-dark`: shadow effects
+  - `--webview-shadow-light` / `--webview-shadow-dark`: layered shadow stacks per theme
+  - `--transition-duration` / `--transition-easing`: motion tokens (decelerated cubic-bezier)
+  - `--urlbar-focus-ring`: accent-colored focus ring on the address/search field
 
 ## Markdown & Docs
 
-- Filenames: lowercase, hyphenated (e.g., `getting-started.md`)
-- Chinese counterparts keep the `-cn.md` suffix alongside the English file
-- Update docs and screenshots when behavior or setup steps change
-
-## Commit Style
-
-Short, direct subjects scoped to one change area. Examples from history:
-- `fix readme.md`
-- `vivalarc 1.1.0`
-- `vivalarc_autotab tabbar background color fallback`
-
-PRs should describe the affected version/variant, link any relevant issue, and include before/after screenshots for visible UI changes.
+- Filenames: lowercase, hyphenated

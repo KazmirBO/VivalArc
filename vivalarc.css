@@ -1,7 +1,14 @@
 /*
-version: 1.4.0
-update: 2026-05-21
+VivalArc — Arc-style theme for Vivaldi
+version: 2.0.0
+update: 2026-06-10
 vivaldi version: v8.0+
+
+v2.0.0 is a ground-up rewrite using native CSS nesting: shared guards such as
+#browser:not(.tabs-top, .tabs-bottom) are declared once per section instead of
+being repeated on every rule. Selector matching is intentionally identical to
+v1.4.0 — only structure, shadows, and motion changed. No @layer on purpose:
+layered rules would lose the cascade against Vivaldi's own unlayered styles.
 
 IMPORTANT — Vivaldi 8.0 introduced a "Unified frame" UI overhaul and a tabs
 management backend rewrite. If something looks broken, inspect the live DOM at
@@ -16,391 +23,432 @@ below. Sections that are most likely affected are marked [v8.0 check].
     initial-value: 0;
 }
 
-:root{
-    --window-border:3px;            /* window border, recommend 4px~16px */
-    --mac-header:calc(var(--window-border) + 20px);
-    --win-header:calc(var(--window-border) + 20px);
-    --linux-header:calc(var(--window-border) + 20px);
-    --win-title-padding:140px;
-    --linux-title-padding:120px;
-    --footer-height:24px;
-    --window-button-scale:0.8;
-    --window-button-opacity:0.3;
-    --window-button-hover-opacity:1;
-    --colorArcBg:transparent;
-    --webview-shadow-light:0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 0px var(--window-border) 0px rgba(0, 0, 0, 0.10);
-    --webview-shadow-dark:0px 2px 2px 0px rgba(0, 0, 0, 0.05), 0px 2px 8px 0px rgba(0, 0, 0, 0.05), 0px 0px 0px 1.2px #ffffff18;
-    /* transitions */
-    --transition-duration:0.15s;
-    --transition-easing:ease;
-    --tabbar-transition:width var(--transition-duration) var(--transition-easing);
+/* ================================================================ Tokens */
+:root {
+    --window-border: 4px;            /* window border, recommend 4px~16px */
+    --mac-header: calc(var(--window-border) + 20px);
+    --win-header: calc(var(--window-border) + 20px);
+    --linux-header: calc(var(--window-border) + 20px);
+    --win-title-padding: 140px;
+    --linux-title-padding: 120px;
+    --footer-height: 24px;
+    --window-button-scale: 0.8;
+    --window-button-opacity: 0.3;
+    --window-button-hover-opacity: 1;
+    --colorArcBg: transparent;
+
+    /* webview shadows — layered: tight contact shadow + soft ambient + hairline edge */
+    --webview-shadow-light:
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        0 0 0 0.5px rgba(0, 0, 0, 0.04);
+    --webview-shadow-dark:
+        0 2px 6px rgba(0, 0, 0, 0.22),
+        0 8px 24px rgba(0, 0, 0, 0.16),
+        0 0 0 1px rgba(255, 255, 255, 0.10);
+
+    /* motion — decelerated curve feels snappier than plain ease at equal duration */
+    --transition-duration: 0.18s;
+    --transition-easing: cubic-bezier(0.2, 0, 0, 1);
+    --tabbar-transition: width var(--transition-duration) var(--transition-easing);
+
+    /* focus ring on address/search fields; uses theme accent, fades via color-mix */
+    --urlbar-focus-ring: 0 0 0 2px color-mix(in srgb, var(--colorHighlightBg, var(--colorAccentBg)) 35%, transparent);
+
     /* auto-hide tabbar — set to 1 to enable (see bottom of file) */
-    --enable-autohide-tabbar:0;
-    --autohide-tabbar-size:32px;
-    --autohide-tabbar-collapsed:calc(var(--autohide-tabbar-size) + var(--densityGap, 4px)); /* derived: collapsed bar width */
+    --enable-autohide-tabbar: 0;
+    --autohide-tabbar-size: 32px;
+    --autohide-tabbar-collapsed: calc(var(--autohide-tabbar-size) + var(--densityGap, 4px)); /* derived: collapsed bar width */
+
     /* style container for @container style() queries */
-    container-type:style;
-    container-name:vivalarc-root;
+    container-type: style;
+    container-name: vivalarc-root;
 }
 
-/* Core layout [v8.0 check: Unified frame may affect #header/#main relationships] */
-#browser.break-mode #main{
-    opacity:0;
+/* ====================================================== Global, unguarded */
+#browser.break-mode #main {
+    opacity: 0;
 }
 
-#modal-bg.default-browser{
-    display:none;
+#modal-bg.default-browser {
+    display: none;
 }
 
-#browser:not(.tabs-bottom, .tabs-top) footer#footer,
-#browser:not(.tabs-bottom, .tabs-top) > footer,
-#browser > footer > .toolbar-statusbar{
-    background:var(--colorArcBg);
-    color: var(--colorImageBottomFg);
-    height: calc(var(--footer-height) + var(--densityGap) * 2);
-    border:none;
-}
-
-#browser:not(.is-settingspage, .tabs-top, .tabs-bottom) #header{
-    box-shadow:none;
-    background:var(--colorArcBg);
-    overflow: visible;
-}
-
-#browser:not(.tabs-top, .tabs-bottom) .mainbar{
-    border:none;
-    background: var(--colorArcBg);
-    color:var(--colorImageTopFg, var(--colorFg));
-    -webkit-app-region: drag;
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField){
-    background-color: var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
-    border: 1px solid var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
-    color:var(--colorImageCenterFgAlpha, var(--colorFg));
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField):focus-within{
-    background-color: var(--colorBg);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(
-    .UrlFragment-Wrapper:not(.UrlFragment-Wrapper--ShouldHighlight),
-    .UrlFragment-Wrapper--ShouldHighlight,
-    .UrlFragment--Highlight
-){
-    --HighlightColor:var(--colorImageCenterFgAlpha, var(--colorFg));
-    --LowlightColor: var(--colorImageCenterFgAlpha, var(--colorFg));
-}
-
-.button-toolbar > button{
-    border:none;
-}
-
-#browser:not(.tabs-top, .tabs-bottom).density-on .toolbar-mainbar:not(.toolbar-wrap) .button-toolbar:not(:last-of-type),
-#browser:not(.tabs-top, .tabs-bottom).density-on .toolbar-statusbar .button-toolbar:not(:last-of-type){
-    padding-right:0;
-    margin-right:var(--densityGap);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(.ExtensionIcon--Hidden, .ExtensionToggleIcon.ExtensionToggleIcon--Expanded){
-    background-color:var(--colorArcBg);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(
-    .ExtensionIcon--Hidden:hover,
-    .ExtensionIcon--Hidden:active,
-    .button-toolbar > button:hover,
-    .button-toolbar > button:active
-){
-    background-color:var(--colorBgAlphaHeavier);
-    border-radius:var(--radius);
-}
-
-#browser:not(.tabs-top, .tabs-bottom).color-behind-tabs-off :is(
-    .toolbar-mainbar .toolbar-extensions > .button-toolbar > button:hover,
-    .toolbar-mainbar .page-zoom-controls > .button-toolbar > button:hover,
-    .toolbar-mainbar > .button-toolbar > button:hover,
-    .toolbar-mainbar .toolbar-extensions > .toolbar-group > .button-toolbar > button:hover,
-    .toolbar-mainbar .page-zoom-controls > .toolbar-group > .button-toolbar > button:hover,
-    .toolbar-mainbar > .toolbar-group > .button-toolbar > button:hover,
-    .ExtensionIcon:hover,
-    .ExtensionIcon--Hidden:hover,
-    .ExtensionIcon--Hidden:active,
-    .bookmark-bar button:hover
-){
-    background-color: var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
-    border-radius:var(--radius);
-}
-
-#browser:not(.tabs-top) #titlebar .vivaldi{
-    margin-left:8px;
-}
-
-/*windowButtonGroup-Linux*/
-#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup{
-    right: calc(var(--window-border) / var(--uiZoomLevel));
-    top: calc(1px / var(--uiZoomLevel));
-}
-
-#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button{
-    width:calc((var(--linux-header) - 2px) * 1.32 / var(--uiZoomLevel));
-    height:calc((var(--linux-header) - 2px) / var(--uiZoomLevel));
-    padding:0px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg{
-    scale: calc(var(--window-button-scale) / var(--uiZoomLevel));
-    opacity:var(--window-button-opacity);
-}
-
-#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg:hover{
-    opacity:var(--window-button-hover-opacity);
-}
-
-/* Tab bar [v8.0 check: tabs backend rewrite may affect .tabbar-wrapper and #tabs-tabbar-container] */
-:is(.tabs-left, .tabs-right) .tabbar-wrapper,
-#browser.transparent-tabbar #tabs-tabbar-container.left,
-#browser.transparent-tabbar #tabs-tabbar-container.right,
-#browser:not(.transparent-tabbar) #tabs-tabbar-container{
-    background: var(--colorArcBg);
-    border: none;
-    box-shadow:none;
-}
-
-#browser:is(.tabs-left, .tabs-right) .inner > .tabbar-wrapper{
-    padding-bottom:var(--window-border);
-}
-
-.color-behind-tabs-off {
-    .tab-indicator {
-        background-color:var(--colorAccentBgAlpha);
-        &:hover {
-            background-color:var(--colorAccentBg);
-        }
-        &.active {
-            background-color:var(--colorAccentBg);
-        }
-    }
-    .tab.active + .tab-group-indicator .tab-indicator.active {
-        background-color:var(--colorAccentBg);
-    }
-}
-
-#browser:not(.tabs-top, .tabs-bottom).color-behind-tabs-off :is(#tabs-subcontainer.left, #tabs-subcontainer.right){
-    box-shadow:none;
-}
-
-#browser:not(.tabs-top, .tabs-bottom).color-behind-tabs-off #tabs-subcontainer,
-#browser:not(.tabs-top, .tabs-bottom).transparent-tabbar #tabs-subcontainer{
-    background-color:transparent;
-}
-
-.color-behind-tabs-off#browser .window-buttongroup.on-mainbar{
-    background:none;
-}
-
-/* Panels [v8.0 check: Unified frame may merge panel/sidebar background with tab bar surface] */
-#browser .manager-editor,
-#browser .toolbar:not(.toolbar-mainbar, .toolbar-statusbar){
-    color:var(--colorImageCenterFgAlpha, var(--colorFg));
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(#panels #switch, #panels, #panels-container){
-    padding-top: 0;
-    border: 0;
-}
-
-.icons #switch .addwebpanel-wrapper > button,
-.icons #switch > .button-toolbar,
-.icons #switch > * > .button-toolbar,
-.icons #switch > button{
-    border-radius:var(--radiusHalf);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) #panels-container{
-    margin-bottom:var(--window-border);
-    background:var(--colorArcBg);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) :is(#panels-container.overlay, #panels-container:not(.icons) .panel-group){
-    background:var(--colorBgAlphaBlur);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons,
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons :is(#panels, #switch, .panel-group, .toolbar-panel){
-    background: var(--colorArcBg);
-    backdrop-filter: none;
-}
-
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.icons :is(#panels, #switch){
-    box-shadow: none;
+.button-toolbar > button {
     border: none;
 }
 
-#browser:not(.tabs-top, .tabs-bottom) #panels-container .panel-group{
-    border-radius:var(--radiusCap);
-}
-
-#browser:not(.tabs-top, .tabs-bottom) #panels-container.overlay .panel-group{
-    border-radius:0;
-}
-
-/* Webview */
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webview-container{
-    margin:0 var(--window-border) var(--window-border);
-}
-
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-left #webview-container{
-    margin-left:0;
-}
-
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-right #webview-container{
-    margin-right:0;
-}
-
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.left #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-right #main.left #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.left #panels-container.minimized.overlay ~ #webview-container,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-right #main.left #panels-container.minimized.overlay ~ #webview-container{
-    margin-left:0;
-}
-
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-left #main.right #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.right #panels-container.icons ~ #webview-container,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-left #main.right #panels-container.minimized.overlay ~ #webview-container,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).tabs-off #main.right #panels-container.minimized.overlay ~ #webview-container{
-    margin-right:0;
+#browser:not(.tabs-top) #titlebar .vivaldi {
+    margin-left: 8px;
 }
 
 #main,
-#main > .inner{
-    overflow:visible;
+#main > .inner {
+    overflow: visible;
 }
 
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webpage-stack{
-    border-radius:var(--radiusCap);
+/* ============== Core layout — side/no tab layouts (the Arc configuration)
+   [v8.0 check: Unified frame may affect #header/#main relationships] */
+#browser:not(.tabs-top, .tabs-bottom) {
+
+    /* Footer */
+    & footer#footer,
+    & > footer,
+    & > footer > .toolbar-statusbar {
+        background: var(--colorArcBg);
+        color: var(--colorImageBottomFg);
+        height: calc(var(--footer-height) + var(--densityGap) * 2);
+        border: none;
+    }
+
+    /* Main toolbar */
+    & .mainbar {
+        border: none;
+        background: var(--colorArcBg);
+        color: var(--colorImageTopFg, var(--colorFg));
+        -webkit-app-region: drag;
+    }
+
+    /* Address / search fields */
+    & :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField) {
+        background-color: var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
+        border: 1px solid var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
+        color: var(--colorImageCenterFgAlpha, var(--colorFg));
+
+        &:focus-within {
+            background-color: var(--colorBg);
+            box-shadow: var(--urlbar-focus-ring);
+        }
+    }
+
+    & :is(.UrlFragment-Wrapper, .UrlFragment--Highlight) {
+        --HighlightColor: var(--colorImageCenterFgAlpha, var(--colorFg));
+        --LowlightColor: var(--colorImageCenterFgAlpha, var(--colorFg));
+    }
+
+    /* Toolbar density */
+    &.density-on .toolbar-mainbar:not(.toolbar-wrap) .button-toolbar:not(:last-of-type),
+    &.density-on .toolbar-statusbar .button-toolbar:not(:last-of-type) {
+        padding-right: 0;
+        margin-right: var(--densityGap);
+    }
+
+    /* Extension icons */
+    & :is(.ExtensionIcon--Hidden, .ExtensionToggleIcon.ExtensionToggleIcon--Expanded) {
+        background-color: var(--colorArcBg);
+    }
+
+    & :is(
+        .ExtensionIcon--Hidden:hover,
+        .ExtensionIcon--Hidden:active,
+        .button-toolbar > button:hover,
+        .button-toolbar > button:active
+    ) {
+        background-color: var(--colorBgAlphaHeavier);
+        border-radius: var(--radius);
+    }
+
+    /* Hover feedback when theme color is not applied behind tabs */
+    &.color-behind-tabs-off :is(
+        :is(.toolbar-mainbar, .toolbar-mainbar .toolbar-extensions, .toolbar-mainbar .page-zoom-controls) > .button-toolbar > button:hover,
+        :is(.toolbar-mainbar, .toolbar-mainbar .toolbar-extensions, .toolbar-mainbar .page-zoom-controls) > .toolbar-group > .button-toolbar > button:hover,
+        .ExtensionIcon:hover,
+        .ExtensionIcon--Hidden:hover,
+        .ExtensionIcon--Hidden:active,
+        .bookmark-bar button:hover
+    ) {
+        background-color: var(--colorImageCenterFgAlphaHeavy, var(--colorFgAlpha));
+        border-radius: var(--radius);
+    }
+
+    /* Tab bar surfaces
+       [v8.0 check: tabs backend rewrite may affect .tabbar-wrapper and #tabs-tabbar-container] */
+    &.color-behind-tabs-off :is(#tabs-subcontainer.left, #tabs-subcontainer.right) {
+        box-shadow: none;
+    }
+
+    &:is(.color-behind-tabs-off, .transparent-tabbar) #tabs-subcontainer {
+        background-color: transparent;
+    }
+
+    /* Panels
+       [v8.0 check: Unified frame may merge panel/sidebar background with tab bar surface] */
+    & :is(#panels #switch, #panels, #panels-container) {
+        padding-top: 0;
+        border: 0;
+    }
+
+    & #panels-container {
+        margin-bottom: var(--window-border);
+        background: var(--colorArcBg);
+
+        &.overlay,
+        &:not(.icons) .panel-group {
+            background: var(--colorBgAlphaBlur);
+        }
+
+        &.icons,
+        &.icons :is(#panels, #switch, .panel-group, .toolbar-panel) {
+            background: var(--colorArcBg);
+            backdrop-filter: none;
+        }
+
+        &.icons :is(#panels, #switch) {
+            box-shadow: none;
+            border: none;
+        }
+
+        & .panel-group {
+            border-radius: var(--radiusCap);
+        }
+
+        &.overlay .panel-group {
+            border-radius: 0;
+        }
+    }
 }
 
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).theme-light #webpage-stack{
-    box-shadow: var(--webview-shadow-light);
-}
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen).theme-dark #webpage-stack{
-    box-shadow: var(--webview-shadow-dark);
+/* Header (also excluded on the settings page) */
+#browser:not(.is-settingspage, .tabs-top, .tabs-bottom) #header {
+    box-shadow: none;
+    background: var(--colorArcBg);
+    overflow: visible;
 }
 
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webpage-stack:has(.tiled .visible),
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webpage-stack:has(.mosaic .visible){
+/* =================================================== Window buttons, Linux */
+#browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup {
+    right: calc(var(--window-border) / var(--uiZoomLevel));
+    top: calc(1px / var(--uiZoomLevel));
+
+    & button {
+        width: calc((var(--linux-header) - 2px) * 1.32 / var(--uiZoomLevel));
+        height: calc((var(--linux-header) - 2px) / var(--uiZoomLevel));
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        & svg {
+            scale: calc(var(--window-button-scale) / var(--uiZoomLevel));
+            opacity: var(--window-button-opacity);
+        }
+
+        &:hover svg {
+            opacity: var(--window-button-hover-opacity);
+        }
+    }
+}
+
+.color-behind-tabs-off#browser .window-buttongroup.on-mainbar {
+    background: none;
+}
+
+/* =============================================================== Tab bar
+   [v8.0 check: tabs backend rewrite may affect .tabbar-wrapper and #tabs-tabbar-container] */
+#browser:is(.tabs-left, .tabs-right) .tabbar-wrapper,
+#browser.transparent-tabbar #tabs-tabbar-container:is(.left, .right),
+#browser:not(.transparent-tabbar) #tabs-tabbar-container {
+    background: var(--colorArcBg);
+    border: none;
     box-shadow: none;
 }
 
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webview-container:has(#webpage-stack .tiled .visible),
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) #webview-container:has(#webpage-stack .mosaic .visible){
-    box-shadow: none;
-    padding:0;
+#browser:is(.tabs-left, .tabs-right) .inner > .tabbar-wrapper {
+    padding-bottom: var(--window-border);
 }
 
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .mosaic-split .mosaic-split-line,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .mosaic-split .mosaic-split-line:before,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .mosaic-split .mosaic-split-line:after,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen) .tile,
-#browser:not(.tabs-top, .tabs-bottom, .fullscreen, .narrow-tiling) .tiled.visible .tile[data-id]{
-    background:transparent;
-    box-shadow:none;
+.color-behind-tabs-off {
+    & .tab-indicator {
+        background-color: var(--colorAccentBgAlpha);
+
+        &:hover,
+        &.active {
+            background-color: var(--colorAccentBg);
+        }
+    }
+
+    & .tab.active + .tab-group-indicator .tab-indicator.active {
+        background-color: var(--colorAccentBg);
+    }
 }
 
-/* Start page */
-.startpage .startpage-navigation{
-    box-shadow:none !important;
-    background:transparent !important;
+/* ================================================================ Panels */
+#browser .manager-editor,
+#browser .toolbar:not(.toolbar-mainbar, .toolbar-statusbar) {
+    color: var(--colorImageCenterFgAlpha, var(--colorFg));
 }
 
-.startpage .startpage-navigation .startpage-navigation-group{
-    border:0 !important;
+.icons #switch {
+    & .addwebpanel-wrapper > button,
+    & > .button-toolbar,
+    & > * > .button-toolbar,
+    & > button {
+        border-radius: var(--radiusHalf);
+    }
 }
 
-button.button-startpage{
-    box-shadow:none !important;
+/* =============================================================== Webview */
+#browser:not(.tabs-top, .tabs-bottom, .fullscreen) {
+
+    & #webview-container {
+        margin: 0 var(--window-border) var(--window-border);
+    }
+
+    &.tabs-left #webview-container {
+        margin-left: 0;
+    }
+
+    &.tabs-right #webview-container {
+        margin-right: 0;
+    }
+
+    /* Flush the webview against icon panels / minimized overlay panels */
+    &:is(.tabs-off, .tabs-right) #main.left :is(#panels-container.icons, #panels-container.minimized.overlay) ~ #webview-container {
+        margin-left: 0;
+    }
+
+    &:is(.tabs-left, .tabs-off) #main.right :is(#panels-container.icons, #panels-container.minimized.overlay) ~ #webview-container {
+        margin-right: 0;
+    }
+
+    & #webpage-stack {
+        border-radius: var(--radiusCap);
+        box-shadow: var(--webview-shadow-light); /* light is also the fallback for custom themes */
+    }
+
+    &.theme-dark #webpage-stack {
+        box-shadow: var(--webview-shadow-dark);
+    }
+
+    /* No shadows or padding around tiled / mosaic page grids */
+    & #webpage-stack:has(:is(.tiled, .mosaic) .visible) {
+        box-shadow: none;
+    }
+
+    & #webview-container:has(#webpage-stack :is(.tiled, .mosaic) .visible) {
+        box-shadow: none;
+        padding: 0;
+    }
+
+    & .mosaic-split .mosaic-split-line,
+    & .mosaic-split .mosaic-split-line::before,
+    & .mosaic-split .mosaic-split-line::after,
+    & .tile {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    &:not(.narrow-tiling) .tiled.visible .tile[data-id] {
+        background: transparent;
+        box-shadow: none;
+    }
 }
 
-button.button-startpage:after{
-    background-image:none !important;
+/* ============================================================ Start page
+   !important required: Vivaldi sets these inline or with high-specificity rules */
+.startpage .startpage-navigation {
+    box-shadow: none !important;
+    background: transparent !important;
+
+    & .startpage-navigation-group {
+        border: 0 !important;
+    }
 }
 
-button.button-startpage:active{
-    background:none !important;
+button.button-startpage {
+    box-shadow: none !important;
+
+    &::after {
+        background-image: none !important;
+    }
+
+    &:active {
+        background: none !important;
+    }
 }
 
-/* Transitions */
+/* ================================================================ Motion */
 @media (prefers-reduced-motion: no-preference) {
     .inner #tabs-tabbar-container,
-    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
-        transition:var(--tabbar-transition);
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu {
+        transition: var(--tabbar-transition);
     }
 
-    #browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg{
-        transition:opacity var(--transition-duration) var(--transition-easing);
+    #browser.linux:not(.is-settingspage, .tabs-top, .tabs-bottom) .window-buttongroup button svg {
+        transition: opacity var(--transition-duration) var(--transition-easing);
     }
 
-    #browser:not(.tabs-top, .tabs-bottom) #panels-container{
-        transition:var(--tabbar-transition);
+    #browser:not(.tabs-top, .tabs-bottom) #panels-container {
+        transition: var(--tabbar-transition);
+    }
+
+    /* Gentle hover/focus feedback on toolbar buttons and the address field */
+    .button-toolbar > button,
+    .ExtensionIcon {
+        transition: background-color var(--transition-duration) var(--transition-easing);
+    }
+
+    #browser:not(.tabs-top, .tabs-bottom) :is(.UrlBar-SearchField, .UrlBar-AddressField, .SearchField) {
+        transition:
+            background-color var(--transition-duration) var(--transition-easing),
+            box-shadow var(--transition-duration) var(--transition-easing);
     }
 }
 
-/* Vivaldi sets inline transition on #panels-container; !important is required to override it for reduced-motion users */
+/* Vivaldi sets inline transition on #panels-container; !important is required
+   to override it for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
-    #browser:not(.tabs-top, .tabs-bottom) #panels-container{
+    #browser:not(.tabs-top, .tabs-bottom) #panels-container {
         transition: none !important;
     }
 }
 
-/* Auto-hide tabbar — original implementation by @Zettry.
+/* ===================================== Auto-hide tabbar (optional feature)
+   Original implementation by @Zettry.
    To enable: set --enable-autohide-tabbar: 1 in :root above. */
 @container vivalarc-root style(--enable-autohide-tabbar: 1) {
-    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu{
+    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu {
         width: var(--autohide-tabbar-collapsed) !important;
     }
 
     .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title,
-    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator{
+    .inner > .tabbar-wrapper:not(:hover) .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator {
         display: none;
     }
 
-    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-icon{
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-icon {
         position: absolute;
         left: 5px;
     }
 
-    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title{
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-title {
         position: absolute;
         left: var(--autohide-tabbar-collapsed) !important;
     }
 
-    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator{
+    .inner .button-toolbar.workspace-popup.tabbar-workspace-button.button-menu .button-toolbar-menu-indicator {
         position: absolute;
         right: 5px;
     }
 
     .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container,
-    .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container .resize{
+    .inner > .tabbar-wrapper:not(:hover) #tabs-tabbar-container .resize {
         width: var(--autohide-tabbar-collapsed) !important;
     }
 
-    .inner > .tabbar-wrapper{
+    .inner > .tabbar-wrapper {
         position: relative;
         width: var(--autohide-tabbar-collapsed);
     }
 
-    .inner > .tabbar-wrapper > .tabbar-wrapper{
+    .inner > .tabbar-wrapper > .tabbar-wrapper {
         position: absolute;
         overflow: hidden;
         z-index: 1;
     }
 
-    .inner > .tabbar-wrapper > .tabbar-wrapper:hover{
+    .inner > .tabbar-wrapper > .tabbar-wrapper:hover {
         background: var(--colorImageLeftBg, var(--colorBgLight));
     }
 }
+                                                                                

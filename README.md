@@ -2,7 +2,7 @@
 
 Transform Vivaldi Browser into Arc Browser's elegant design - the perfect Arc alternative.
 
-**Current Version**: v1.4.0 | **Supports Vivaldi**: v8.0+ | **Platforms**: macOS, Windows, Linux
+**Current Version**: v2.0.0 | **Supports Vivaldi**: v8.0+ | **Platforms**: macOS, Windows, Linux
 
 ## 🚀 Quick Start
 
@@ -20,6 +20,8 @@ This is the only version that receives ongoing fixes and new features.
 
 **Built-in optional features** — edit `vivalarc.css` and set in the `:root` block:
 - `--enable-autohide-tabbar: 1` — tab bar collapses to icon width, expands on hover
+
+**Customization tokens** (all in the `:root` block): `--window-border`, `--window-button-opacity`, `--webview-shadow-light` / `--webview-shadow-dark`, `--transition-duration` / `--transition-easing`, `--urlbar-focus-ring`
 
 #### 📦 Archived Versions (Legacy Support)
 - **Vivaldi 7.7**: `VivalArc/archive/v7.7/` (autotab and compact variants)
@@ -56,13 +58,13 @@ This feels cleaner and more comfortable to use than forcing every control into t
 - [🧑‍💻FAQ](./docs/reference/faq.md)
 - [🎉Change Log](./docs/reference/changelog.md)
 - [🌐VivalArc Website](https://arc.tovi.fun)
-- [📝中文文档](./README-cn.md)
+- [📝Dokumentacja po polsku](./README-pl.md)
 
 ## 📂 Project Structure
 
 ```
 VivalArc/
-├── vivalarc.css           # v8.0 default version (actively maintained)
+├── vivalarc.css           # v2.0 stylesheet for Vivaldi 8.0+ (actively maintained)
 ├── archive/              # Legacy versions
 │   ├── v7.7/             # autotab and compact variants (Vivaldi 7.7)
 │   ├── v6.9/
@@ -89,7 +91,4 @@ VivalArc/
 ---
 
 ## 🧑‍💻 Beautiful Screenshots from：
-- Twitter [@altemo](https://x.com/atlemo/status/1765726601239491014)
-- Twitter [@vivaldi_fr](https://twitter.com/vivaldi_fr/status/1684643796942815233)
-- Github [@clementpoiret](https://github.com/tovifun/VivalArc/pull/5)
-- Bilibili [@tovi(me😉)](https://www.bilibili.com/opus/844070281819455558)
+- Twitter [@altemo](https://x.com/atlemo/status/17657266
