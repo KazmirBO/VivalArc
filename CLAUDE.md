@@ -56,4 +56,15 @@ Optional features are toggled via CSS variables in the `:root` block of `vivalar
 
 ## Markdown & Docs
 
-- Filenames: lowercase, hyphenated
+- Filenames: lowercase, hyphenated (e.g., `getting-started.md`)
+- Polish counterparts keep the `-pl.md` suffix alongside the English file
+- Update docs and screenshots when behavior or setup steps change
+
+## Commit Style
+
+Short, direct subjects scoped to one change area. Examples from history:
+- `fix readme.md`
+- `vivalarc 1.1.0`
+- `vivalarc_autotab tabbar background color fallback`
+
+PRs should describe the affected version/variant, link any relevant issue, and include before/after screenshots for visible UI changes.

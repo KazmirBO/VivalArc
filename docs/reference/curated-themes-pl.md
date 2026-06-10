@@ -40,4 +40,4 @@ Znajdziesz je również w lokalnym folderze ../../themes/
 | [Purple Magic](https://themes.vivaldi.net/themes/n3MlkpoovEZ)  | ![motyw](../../themes/theme_screenshots/purple_magic.jpg) |
 | [Montanhas](https://themes.vivaldi.net/themes/MD07Kq4gv14)  | ![motyw](../../themes/theme_screenshots/montanhas.jpg) |
 | [Vivaldi Midnight](https://themes.vivaldi.net/themes/rwjvExj2lAL)  | ![motyw](../../themes/theme_screenshots/vivaldi_midnight.jpg) |
-| [Sunset into the midnight](https://themes.vivaldi.net/themes/gZplByVe
+| [Sunset into the midnight](https://themes.vivaldi.net/themes/gZplByVe7QV)  | ![motyw](../../themes/theme_screenshots/sunset_into_the_midnight.jpg) |

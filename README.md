@@ -91,4 +91,7 @@ VivalArc/
 ---
 
 ## 🧑‍💻 Beautiful Screenshots from：
-- Twitter [@altemo](https://x.com/atlemo/status/17657266
+- Twitter [@altemo](https://x.com/atlemo/status/1765726601239491014)
+- Twitter [@vivaldi_fr](https://twitter.com/vivaldi_fr/status/1684643796942815233)
+- Github [@clementpoiret](https://github.com/tovifun/VivalArc/pull/5)
+- Bilibili [@tovi(me😉)](https://www.bilibili.com/opus/844070281819455558)

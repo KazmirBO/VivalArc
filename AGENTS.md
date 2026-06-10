@@ -22,4 +22,4 @@ There is no automated test suite. Validate changes manually in Vivaldi 8.0+ usin
 Recent history favors short, direct commit subjects such as `fix readme.md`, `vivalarc 1.1.0`, or `vivalarc_autotab tabbar background color fallback`. Keep commits focused on one change area. PRs should describe the affected version or variant, link the issue when applicable, and include before/after screenshots for visible UI changes.
 
 ## Repository Hygiene
-Do not remove or rewrite archived versions unless the change is intentionally for legacy support. Avoid committing editor cruft or local OS artifacts such as `.DS_Store`, and keep packaged assets and docs in sync wi
+Do not remove or rewrite archived versions unless the change is intentionally for legacy support. Avoid committing editor cruft or local OS artifacts such as `.DS_Store`, and keep packaged assets and docs in sync with any renamed folders.
